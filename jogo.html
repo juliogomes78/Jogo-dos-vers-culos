@@ -31,7 +31,7 @@
   </div>
 
   <script>
-  let versiculos = []; // escopo global
+  
 
   const startBtn = document.getElementById('startBtn');
   const gameDiv = document.getElementById('game');
@@ -42,7 +42,7 @@
   const submitBtn = document.getElementById('submitBtn');
   const resultadoDiv = document.getElementById('resultado');
   
-    [
+    const versiculos = [
       { cap: 1, vers: 1, texto: "E sucedeu, depois da morte de Moisés, servo do Senhor, que o Senhor falou a Josué, filho de Num, servo de Moisés, dizendo:" },
       { cap: 1, vers: 2, texto: "Moisés, meu servo, é morto; levanta-te, pois, agora, passa este Jordão, tu e todo este povo, à terra que eu dou aos filhos de Israel." },
       { cap: 1, vers: 3, texto: "Todo lugar que pisar a planta do vosso pé, vo-lo tenho dado, como eu disse a Moisés." },
@@ -560,19 +560,8 @@
 ];
   
      let current, timerId;
+startBtn.disabled = false;
 
-  // Carrega os versículos e habilita o botão
- fetch('versiculos.json')
-  .then(res => res.json())
-  .then(data => {
-    versiculos = data;
-    console.log('Versículos carregados:', versiculos);
-    startBtn.disabled = false; // habilita o botão "Começar"
-  })
-  .catch(err => {
-    console.error('Erro ao carregar versículos:', err);
-    alert('Erro ao carregar os versículos.');
-  });
 
   startBtn.addEventListener('click', () => {
   if (versiculos.length === 0) {
