@@ -1,14 +1,17 @@
 🎮 Nome do Jogo
+
 Um jogo simples e divertido desenvolvido com HTML, CSS e JavaScript. 
 
 ##
 
 📸 Preview
+
 <img width="1160" height="306" alt="image" src="https://github.com/user-attachments/assets/f6839be5-823d-4e58-8835-feb2e4463e31" />
 
 ##
 
-🚀 Como jogar
+🚀 Como jogar ? 
+
 Abra o link do jogo hospedado no GitHub Pages.
 
 O jogo foi desenvolvido como uma forma de aplicar, na prática, os estudos realizados no livro de Josué. A ideia surgiu para auxiliar um grupo de jovens da minha igreja que participará de uma maratona bíblica. Como será a primeira vez de cada um, foi definido um tempo de resposta de 1 minuto para evitar ansiedade e pressão excessiva. Dessa forma, o jogo serve como uma adaptação e preparação para o evento, permitindo que eles se familiarizem com o estilo e a dinâmica do campeonato.
