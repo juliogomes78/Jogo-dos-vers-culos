@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogo: Adivinhe o Capítulo e Versículo (Josué ARC)</title>
   <style>
@@ -40,6 +41,11 @@
     .certo { background: lightgreen !important; }
     .errado { background: lightcoral !important; }
     #timer { font-size: 2rem; margin-bottom: 1rem; }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      input { width: 3rem; margin: 0 0.3rem; }
+      button { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -650,4 +656,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
