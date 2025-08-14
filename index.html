@@ -4,15 +4,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogo: Adivinhe o Capítulo e Versículo (Josué ARC)</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+      background: #f8f8f8;
+    }
     .versiculo {
       margin: 10px 0;
       padding: 8px;
-      border-bottom: 1px solid #ccc; }
-    input { width: 3rem; margin: 0 0.5rem; padding: 0.2rem; font-size: 1rem; }
-    .certo { background: lightgreen; }
-    .errado { background: lightcoral; }
-    #timer { font-size: 2rem; margin-bottom: 1rem; } 
+      border-bottom: 1px solid #ccc;
+    }
+    input {
+      width: 4rem;
+      margin: 0 0.5rem;
+      padding: 0.4rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      background: #0077ff;
+      color: white;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    .certo { background: lightgreen !important; }
+    .errado { background: lightcoral !important; }
+    #timer { font-size: 2rem; margin-bottom: 1rem; }
   </style>
 </head>
 <body>
@@ -23,25 +50,25 @@
     <div id="timer">00:40</div>
     <div id="versiculo"></div>
     <div>
-      Capítulo: <input type="number" id="capInput" min="1">
-      Versículo: <input type="number" id="versInput" min="1">
+      Capítulo:
+      <input type="number" inputmode="numeric" pattern="[0-9]*" id="capInput" min="1">
+      Versículo:
+      <input type="number" inputmode="numeric" pattern="[0-9]*" id="versInput" min="1">
       <button id="submitBtn">Enviar</button>
     </div>
     <div id="resultado" style="margin-top: 1rem;"></div>
   </div>
 
   <script>
-  
+    const startBtn = document.getElementById('startBtn');
+    const gameDiv = document.getElementById('game');
+    const timerDiv = document.getElementById('timer');
+    const versDiv = document.getElementById('versiculo');
+    const capInput = document.getElementById('capInput');
+    const versInput = document.getElementById('versInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const resultadoDiv = document.getElementById('resultado');
 
-  const startBtn = document.getElementById('startBtn');
-  const gameDiv = document.getElementById('game');
-  const timerDiv = document.getElementById('timer');
-  const versDiv = document.getElementById('versiculo');
-  const capInput = document.getElementById('capInput');
-  const versInput = document.getElementById('versInput');
-  const submitBtn = document.getElementById('submitBtn');
-  const resultadoDiv = document.getElementById('resultado');
-  
     const versiculos = [
       { cap: 1, vers: 1, texto: "E sucedeu, depois da morte de Moisés, servo do Senhor, que o Senhor falou a Josué, filho de Num, servo de Moisés, dizendo:" },
       { cap: 1, vers: 2, texto: "Moisés, meu servo, é morto; levanta-te, pois, agora, passa este Jordão, tu e todo este povo, à terra que eu dou aos filhos de Israel." },
@@ -559,73 +586,68 @@
 { cap: 24, vers: 10, texto: "Porém eu não quis ouvir a Balaão; pelo que, abençoando-vos ele, vos abençoou; e livrei-vos da sua mão." },
 ];
   
-     let current, timerId;
-startBtn.disabled = false;
+      let current, timerId;
 
+    startBtn.addEventListener('click', () => {
+      if (versiculos.length === 0) {
+        alert('Versículos ainda não carregados.');
+        return;
+      }
+      startBtn.blur();
+      gameDiv.style.display = 'block';
+      gameDiv.scrollIntoView({ behavior: 'smooth' });
+      startRound();
+    });
 
-  startBtn.addEventListener('click', () => {
-  if (versiculos.length === 0) {
-    alert('Versículos ainda não carregados.');
-    return;
-  }
-  gameDiv.style.display = 'block';
-  startRound();
-});
+    submitBtn.addEventListener('click', () => {
+      clearInterval(timerId);
+      checkAnswer();
+      setTimeout(startRound, 5000);
+    });
 
-  submitBtn.addEventListener('click', () => {
-    clearInterval(timerId);
-    checkAnswer();
-    setTimeout(startRound, 5000);
-  });
+    function startRound() {
+      capInput.value = '';
+      versInput.value = '';
+      capInput.className = '';
+      versInput.className = '';
+      resultadoDiv.textContent = '';
 
-  function startRound() {
-    if (versiculos.length === 0) {
-      alert('Versículos não carregados ainda.');
-      return;
+      current = versiculos[Math.floor(Math.random() * versiculos.length)];
+      versDiv.textContent = current.texto;
+
+      let time = 60;
+      updateTimerDisplay(time);
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        time--;
+        updateTimerDisplay(time);
+        if (time <= 0) {
+          clearInterval(timerId);
+          finish();
+          setTimeout(startRound, 5000);
+        }
+      }, 1000);
     }
 
-    capInput.value = '';
-    versInput.value = '';
-    capInput.className = '';
-    versInput.className = '';
-    resultadoDiv.textContent = '';
+    function updateTimerDisplay(seconds) {
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(seconds % 60).padStart(2, '0');
+      timerDiv.textContent = `${m}:${s}`;
+    }
 
-    current = versiculos[Math.floor(Math.random() * versiculos.length)];
-    versDiv.textContent = current.texto;
+    function checkAnswer() {
+      const capOk = parseInt(capInput.value, 10) === current.cap;
+      const versOk = parseInt(versInput.value, 10) === current.vers;
+      capInput.className = capOk ? 'certo' : 'errado';
+      versInput.className = versOk ? 'certo' : 'errado';
+      resultadoDiv.textContent = `Resposta correta: Capítulo ${current.cap}, Versículo ${current.vers}`;
+    }
 
-    let time = 60;
-    updateTimerDisplay(time);
-    clearInterval(timerId);
-    timerId = setInterval(() => {
-      time--;
-      updateTimerDisplay(time);
-      if (time <= 0) {
-        clearInterval(timerId);
-        finish();
-        setTimeout(startRound, 5000);
-      }
-    }, 1000);
-  }
-
-  function updateTimerDisplay(seconds) {
-    const m = String(Math.floor(seconds / 60)).padStart(2,'0');
-    const s = String(seconds % 60).padStart(2,'0');
-    timerDiv.textContent = `${m}:${s}`;
-  }
-
-  function checkAnswer() {
-    const capOk = parseInt(capInput.value, 10) === current.cap;
-    const versOk = parseInt(versInput.value, 10) === current.vers;
-    capInput.className = capOk ? 'certo' : 'errado';
-    versInput.className = versOk ? 'certo' : 'errado';
-    resultadoDiv.textContent = `Resposta correta: Capítulo ${current.cap}, Versículo ${current.vers}`;
-  }
-
-  function finish() {
-    capInput.className = 'errado';
-    versInput.className = 'errado';
-    resultadoDiv.textContent = `Tempo esgotado! Era o Capítulo ${current.cap}, Versículo ${current.vers}`;
-  }
+    function finish() {
+      capInput.className = 'errado';
+      versInput.className = 'errado';
+      resultadoDiv.textContent = `Tempo esgotado! Era o Capítulo ${current.cap}, Versículo ${current.vers}`;
+    }
   </script>
 </body>
-</html>
+</html> 
